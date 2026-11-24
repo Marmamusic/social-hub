@@ -3,7 +3,8 @@
     "LinkedIn": true,
     "Facebook": true,
     "Instagram": true,
-    "X": false
+    "X": false,
+    "TikTok": false
   },
   "max_posts_per_run": 2,
   "min_hours_per_platform": 36,

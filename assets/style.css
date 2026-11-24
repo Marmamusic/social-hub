@@ -182,6 +182,7 @@ body {
 .plat-LinkedIn { background: rgba(10, 102, 194, 0.22); color: #7cc4ff; }
 .plat-Facebook { background: rgba(24, 119, 242, 0.22); color: #8ab8ff; }
 .plat-Instagram { background: rgba(225, 48, 108, 0.22); color: #ff8ab2; }
+.plat-TikTok { background: rgba(37, 244, 238, 0.18); color: #5efaf5; border: 1px solid rgba(254, 44, 85, 0.4); }
 .plat-X { background: rgba(255, 255, 255, 0.14); color: #f1f5f9; }
 .badge-id { background: var(--surface-2); color: var(--muted); }
 .badge-sched { background: rgba(99, 102, 241, 0.22); color: #c7d2fe; }

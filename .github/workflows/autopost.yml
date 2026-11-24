@@ -7,9 +7,13 @@ on:
   workflow_dispatch:
     inputs:
       platform:
-        description: 'Platform to run (all, LinkedIn, Facebook, Instagram, X)'
+        description: 'Platform to run (all, LinkedIn, Facebook, Instagram, TikTok, X)'
         required: false
         default: 'all'
+      post_id:
+        description: 'Specific Post ID to publish immediately (e.g. IG-001)'
+        required: false
+        default: ''
       max_posts:
         description: 'Max posts to publish in this manual run'
         required: false
@@ -51,6 +55,9 @@ jobs:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_LITTLESOULS_USER_ID: ${{ secrets.IG_LITTLESOULS_USER_ID }}
           IG_LITTLESOULS_ACCESS_TOKEN: ${{ secrets.IG_LITTLESOULS_ACCESS_TOKEN }}
+          TIKTOK_ACCESS_TOKEN: ${{ secrets.TIKTOK_ACCESS_TOKEN }}
+          TIKTOK_POST_MODE: ${{ secrets.TIKTOK_POST_MODE }}
+          TIKTOK_PRIVACY_LEVEL: ${{ secrets.TIKTOK_PRIVACY_LEVEL }}
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
@@ -58,7 +65,12 @@ jobs:
         run: |
           CMD="python scripts/publish_from_queue.py"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            CMD="$CMD --no-jitter --platform ${{ github.event.inputs.platform || 'all' }} --max-posts ${{ github.event.inputs.max_posts || '1' }}"
+            CMD="$CMD --no-jitter"
+            if [ -n "${{ github.event.inputs.post_id }}" ]; then
+              CMD="$CMD --post-id ${{ github.event.inputs.post_id }}"
+            else
+              CMD="$CMD --platform ${{ github.event.inputs.platform || 'all' }} --max-posts ${{ github.event.inputs.max_posts || '1' }}"
+            fi
             if [ "${{ github.event.inputs.ignore_pacing }}" = "true" ]; then
               CMD="$CMD --ignore-pacing"
             fi

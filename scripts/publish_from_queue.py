@@ -22,7 +22,7 @@ QUEUE_PATH = os.path.join(DATA_DIR, 'queue.json')
 CONFIG_PATH = os.path.join(DATA_DIR, 'config.json')
 LOG_PATH = os.path.join(DATA_DIR, 'post_log.json')
 
-PLATFORMS = ['LinkedIn', 'Facebook', 'Instagram', 'X']
+PLATFORMS = ['LinkedIn', 'Facebook', 'Instagram', 'TikTok', 'X']
 
 
 def load_json(path: str, default):
@@ -71,6 +71,8 @@ def has_credentials(platform: str) -> bool:
         return all(os.getenv(k) for k in ('FB_PAGE_ID', 'FB_PAGE_ACCESS_TOKEN'))
     if platform == 'Instagram':
         return all(os.getenv(k) for k in ('IG_USER_ID', 'IG_ACCESS_TOKEN'))
+    if platform == 'TikTok':
+        return bool(os.getenv('TIKTOK_ACCESS_TOKEN'))
     if platform == 'X':
         return all(os.getenv(k) for k in ('X_API_KEY', 'X_API_SECRET', 'X_ACCESS_TOKEN', 'X_ACCESS_TOKEN_SECRET'))
     return False
@@ -302,6 +304,78 @@ def publish_instagram(post: dict, config: dict) -> str:
     return f'https://www.instagram.com/p/{media_id}/'
 
 
+# ---------------- TikTok (Official Content Posting API v2) ---------------- #
+
+def publish_tiktok(post: dict, config: dict) -> str:
+    """Publish a Photo or Video post via TikTok Content Posting API v2.
+    Defaults to MEDIA_UPLOAD (TikTok Drafts Inbox, works without App Review).
+    Set secret TIKTOK_POST_MODE=DIRECT_POST once your TikTok app is audited for public posting."""
+    token = os.getenv('TIKTOK_ACCESS_TOKEN')
+    if not token:
+        raise RuntimeError('Missing TIKTOK_ACCESS_TOKEN secret.')
+
+    media_url = resolve_public_media_url(post.get('media', ''), config)
+    if not media_url:
+        raise RuntimeError('TikTok posts require a photo (.jpg) or video (.mp4).')
+
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json; charset=UTF-8',
+    }
+    post_mode = (os.getenv('TIKTOK_POST_MODE') or 'MEDIA_UPLOAD').strip().upper()
+    privacy = (os.getenv('TIKTOK_PRIVACY_LEVEL') or 'SELF_ONLY').strip().upper()
+    caption = (post.get('text') or '').strip()
+    title = (post.get('project') or caption[:80] or 'Post')[:90]
+    is_video = media_url.lower().endswith('.mp4')
+
+    if is_video:
+        if post_mode == 'DIRECT_POST':
+            url = 'https://open.tiktokapis.com/v2/post/publish/video/init/'
+            payload = {
+                'post_info': {
+                    'title': caption[:2200],
+                    'privacy_level': privacy,
+                    'disable_duet': False,
+                    'disable_comment': False,
+                    'disable_stitch': False,
+                },
+                'source_info': {'source': 'PULL_FROM_URL', 'video_url': media_url},
+            }
+        else:
+            url = 'https://open.tiktokapis.com/v2/post/publish/inbox/video/init/'
+            payload = {
+                'source_info': {'source': 'PULL_FROM_URL', 'video_url': media_url},
+            }
+    else:
+        url = 'https://open.tiktokapis.com/v2/post/publish/content/init/'
+        payload = {
+            'post_info': {
+                'title': title,
+                'description': caption[:4000],
+                'privacy_level': privacy if post_mode == 'DIRECT_POST' else 'SELF_ONLY',
+                'disable_comment': False,
+                'auto_add_music': True,
+            },
+            'source_info': {
+                'source': 'PULL_FROM_URL',
+                'photo_cover_index': 0,
+                'photo_images': [media_url],
+            },
+            'post_mode': 'DIRECT_POST' if post_mode == 'DIRECT_POST' else 'MEDIA_UPLOAD',
+            'media_type': 'PHOTO',
+        }
+
+    resp = requests.post(url, headers=headers, json=payload, timeout=30)
+    data = resp.json() if resp.headers.get('content-type', '').startswith('application/json') else {}
+    err = (data.get('error') or {})
+    if resp.status_code != 200 or (err.get('code') and err.get('code') != 'ok'):
+        raise RuntimeError(f'TikTok API error {resp.status_code}: {resp.text}')
+
+    pub_id = (data.get('data') or {}).get('publish_id', 'submitted')
+    mode_note = 'inbox-draft' if post_mode != 'DIRECT_POST' else 'direct'
+    return f'https://www.tiktok.com/ (publish_id={pub_id}, mode={mode_note})'
+
+
 # ---------------- X (Optional) ---------------- #
 
 def publish_x(post: dict, config: dict) -> str:
@@ -338,6 +412,7 @@ PUBLISHERS = {
     'LinkedIn': publish_linkedin,
     'Facebook': publish_facebook,
     'Instagram': publish_instagram,
+    'TikTok': publish_tiktok,
     'X': publish_x,
 }
 
@@ -347,7 +422,8 @@ PUBLISHERS = {
 def main():
     parser = argparse.ArgumentParser(description='Martin Social Hub Cloud Auto-Poster')
     parser.add_argument('--dry-run', action='store_true', help='Preview without calling live APIs')
-    parser.add_argument('--platform', default='all', help='Limit to one platform (LinkedIn/Facebook/Instagram/X/all)')
+    parser.add_argument('--platform', default='all', help='Limit to one platform (LinkedIn/Facebook/Instagram/TikTok/X/all)')
+    parser.add_argument('--post-id', default='', help='Publish one specific post ID immediately (from Post Now button)')
     parser.add_argument('--max-posts', type=int, default=0, help='Override config max_posts_per_run')
     parser.add_argument('--no-jitter', action='store_true', help='Skip randomized startup sleep')
     parser.add_argument('--ignore-pacing', action='store_true', help='Ignore min_hours_per_platform (for manual testing)')
@@ -358,72 +434,84 @@ def main():
     config = load_json(CONFIG_PATH, {})
     post_log = load_json(LOG_PATH, [])
 
-    enabled = config.get('enabled_platforms', {'LinkedIn': True, 'Facebook': True, 'Instagram': True, 'X': False})
+    enabled = config.get('enabled_platforms', {'LinkedIn': True, 'Facebook': True, 'Instagram': True, 'TikTok': False, 'X': False})
     max_posts = args.max_posts if args.max_posts > 0 else int(config.get('max_posts_per_run', 2))
     min_hours = 0.0 if args.ignore_pacing else float(config.get('min_hours_per_platform', 36))
     do_shuffle = bool(config.get('shuffle', True))
     jitter_max = int(config.get('random_jitter_max_minutes', 35))
 
-    if args.platform != 'all':
-        target_platforms = [args.platform]
+    if args.post_id.strip():
+        target_id = args.post_id.strip()
+        to_publish = [(idx, p) for idx, p in enumerate(posts) if p.get('id') == target_id]
+        if not to_publish:
+            print(f'Post ID "{target_id}" not found in data/queue.json.')
+            sys.exit(1)
+        idx0, p0 = to_publish[0]
+        if (p0.get('status') or '').upper() == 'POSTED':
+            print(f'Post ID "{target_id}" is already POSTED ({p0.get("live_url", "")}). Skipping duplicate.')
+            return
+        print(f'[{datetime.now(timezone.utc).isoformat()}] Post Now targeted run for {target_id} ({p0.get("platform")})')
     else:
-        target_platforms = [p for p in PLATFORMS if enabled.get(p, False)]
+        if args.platform != 'all':
+            target_platforms = [args.platform]
+        else:
+            target_platforms = [p for p in PLATFORMS if enabled.get(p, False)]
 
-    now_utc = datetime.now(timezone.utc)
-    print(f'[{now_utc.isoformat()}] Social Hub Runner | Dry-Run={args.dry_run} | Platforms={target_platforms} | Max={max_posts}')
+        now_utc = datetime.now(timezone.utc)
+        print(f'[{now_utc.isoformat()}] Social Hub Runner | Dry-Run={args.dry_run} | Platforms={target_platforms} | Max={max_posts}')
 
-    # Collect eligible posts
-    due_scheduled = []
-    auto_pool = []
+        # Collect eligible posts
+        due_scheduled = []
+        auto_pool = []
 
-    for idx, p in enumerate(posts):
-        plat = p.get('platform')
-        if plat not in target_platforms:
-            continue
-        if not p.get('approved'):
-            continue
-        if (p.get('status') or 'PENDING').upper() != 'PENDING':
-            continue
-        if (p.get('automation_mode') or 'API_AUTO').upper() != 'API_AUTO':
-            continue
-        if not args.dry_run and not has_credentials(plat):
-            continue
-
-        sched_dt = parse_iso_utc(p.get('scheduled_at', ''))
-        if sched_dt:
-            if sched_dt <= now_utc:
-                due_scheduled.append((idx, p))
-            continue
-
-        # Auto-queue post: check platform pacing
-        if min_hours > 0:
-            hrs = hours_since_last_post(post_log, plat)
-            if hrs < min_hours:
+        for idx, p in enumerate(posts):
+            plat = p.get('platform')
+            if plat not in target_platforms:
                 continue
-        auto_pool.append((idx, p))
+            if not p.get('approved'):
+                continue
+            if (p.get('status') or 'PENDING').upper() != 'PENDING':
+                continue
+            if (p.get('automation_mode') or 'API_AUTO').upper() != 'API_AUTO':
+                continue
+            if not args.dry_run and not has_credentials(plat):
+                continue
 
-    if do_shuffle:
-        random.shuffle(auto_pool)
+            sched_dt = parse_iso_utc(p.get('scheduled_at', ''))
+            if sched_dt:
+                if sched_dt <= now_utc:
+                    due_scheduled.append((idx, p))
+                continue
 
-    # Pick scheduled due posts first, then up to 1 auto-queue post per platform until max_posts
-    to_publish = []
-    seen_auto_plats = set()
-    for item in due_scheduled:
-        to_publish.append(item)
-        seen_auto_plats.add(item[1]['platform'])
+            # Auto-queue post: check platform pacing
+            if min_hours > 0:
+                hrs = hours_since_last_post(post_log, plat)
+                if hrs < min_hours:
+                    continue
+            auto_pool.append((idx, p))
 
-    for item in auto_pool:
-        if len(to_publish) >= max_posts:
-            break
-        plat = item[1]['platform']
-        if min_hours > 0 and plat in seen_auto_plats:
-            continue
-        to_publish.append(item)
-        seen_auto_plats.add(plat)
+        if do_shuffle:
+            random.shuffle(auto_pool)
 
-    if not to_publish:
-        print('No eligible posts to publish in this run (either paced, scheduled in future, or queue complete).')
-        return
+        # Pick scheduled due posts first, then up to 1 auto-queue post per platform until max_posts
+        to_publish = []
+        seen_auto_plats = set()
+        for item in due_scheduled:
+            to_publish.append(item)
+            seen_auto_plats.add(item[1]['platform'])
+
+        for item in auto_pool:
+            if len(to_publish) >= max_posts:
+                break
+            plat = item[1]['platform']
+            if min_hours > 0 and plat in seen_auto_plats:
+                continue
+            to_publish.append(item)
+            seen_auto_plats.add(plat)
+
+        if not to_publish:
+            print('No eligible posts to publish in this run (either paced, scheduled in future, or queue complete).')
+            return
 
     # Optional random jitter on scheduled GitHub Actions runs so posts don't always land on :00
     is_scheduled_event = os.getenv('GITHUB_EVENT_NAME') == 'schedule'

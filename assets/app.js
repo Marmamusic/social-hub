@@ -4,7 +4,7 @@ const GH_STORE_KEY = 'martin_social_hub_gh_v1';
 let state = {
   posts: [],
   config: {
-    enabled_platforms: { LinkedIn: true, Facebook: true, Instagram: true, X: false },
+    enabled_platforms: { LinkedIn: true, Facebook: true, Instagram: true, TikTok: false, X: false },
     max_posts_per_run: 2,
     min_hours_per_platform: 36,
     shuffle: true,
@@ -196,9 +196,9 @@ async function syncToGitHub() {
   }
 }
 
-async function triggerWorkflowRun(platform, maxPosts, ignorePacing, dryRun) {
+async function triggerWorkflowRun(platform, maxPosts, ignorePacing, dryRun, postId = '') {
   if (state.dirty) {
-    const ok = confirm('You have unsaved changes. Save & Sync to GitHub first before running?');
+    const ok = postId ? true : confirm('You have unsaved changes. Save & Sync to GitHub first before running?');
     if (ok) await syncToGitHub();
   }
   await ghFetch('actions/workflows/autopost.yml/dispatches', {
@@ -208,12 +208,40 @@ async function triggerWorkflowRun(platform, maxPosts, ignorePacing, dryRun) {
       ref: state.gh.branch,
       inputs: {
         platform: platform || 'all',
+        post_id: postId || '',
         max_posts: String(maxPosts || 1),
         ignore_pacing: ignorePacing ? 'true' : 'false',
         dry_run: dryRun ? 'true' : 'false',
       },
     }),
   });
+}
+
+async function postNow(id) {
+  const p = state.posts.find((x) => x.id === id);
+  if (!p) return;
+  if (!state.gh.token) {
+    openSettingsModal();
+    toast('Connect your GitHub token in Settings to use Post Now.', 4000);
+    return;
+  }
+  const msg = p.approved
+    ? `Publish "${p.project || p.id}" to ${p.platform} right now?`
+    : `Approve and publish "${p.project || p.id}" to ${p.platform} right now?`;
+  if (!confirm(msg)) return;
+  if (!p.approved) {
+    p.approved = true;
+    markDirty();
+    render();
+  }
+  try {
+    toast(`🚀 Sending ${p.id} to ${p.platform} via GitHub Actions...`, 5000);
+    await triggerWorkflowRun(p.platform, 1, true, false, p.id);
+    toast(`🚀 Post Now triggered for ${p.id} (${p.platform})! Auto-refreshing in 40s...`, 7000);
+    setTimeout(() => loadData(), 40000);
+  } catch (e) {
+    alert('Post Now failed:\n' + e.message);
+  }
 }
 
 // ---------------- Rendering ---------------- //
@@ -323,21 +351,34 @@ function renderCard(p, bucket) {
       : '';
 
   const actions = [];
+  const enabledPlats = state.config.enabled_platforms || {};
+  const canAutoPost = (p.automation_mode || 'API_AUTO').toUpperCase() === 'API_AUTO' && Boolean(enabledPlats[p.platform]);
+
   if (bucket === 'review') {
     actions.push(`<button class="btn btn-ok btn-sm" onclick="approvePost('${p.id}', true)">✓ Approve & Queue</button>`);
+    if (canAutoPost) {
+      actions.push(`<button class="btn btn-primary btn-sm" onclick="postNow('${p.id}')">🚀 Post Now</button>`);
+    }
     actions.push(`<button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')">✎ Edit</button>`);
     actions.push(`<button class="btn btn-danger btn-sm" onclick="archivePost('${p.id}')">🗑 Archive</button>`);
   } else if (bucket === 'scheduled') {
+    actions.push(`<button class="btn btn-ok btn-sm" onclick="postNow('${p.id}')">🚀 Post Now</button>`);
     actions.push(`<button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')">✎ Edit / Schedule</button>`);
-    actions.push(`<button class="btn btn-outline btn-sm" onclick="approvePost('${p.id}', false)">↩ Move to Review</button>`);
+    actions.push(`<button class="btn btn-outline btn-sm" onclick="approvePost('${p.id}', false)">↩ Review</button>`);
     actions.push(`<button class="btn btn-outline btn-sm" onclick="copyPostText('${p.id}', this)">📋 Copy</button>`);
   } else if (bucket === 'manual') {
     actions.push(`<button class="btn btn-primary btn-sm" onclick="copyPostText('${p.id}', this)">📋 Copy Text</button>`);
+    if (p.platform === 'X') {
+      const intentUrl = `https://x.com/intent/post?text=${encodeURIComponent(p.text || '')}`;
+      actions.push(`<a class="btn btn-outline btn-sm" href="${escapeHtml(intentUrl)}" target="_blank" rel="noopener">𝕏 Compose on X</a>`);
+    }
     if (media) {
-      actions.push(`<button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(publicMediaUrl(media))}', this)">🖼 Copy Media URL</button>`);
+      const fname = media.split('/').pop() || 'media.jpg';
+      actions.push(`<a class="btn btn-outline btn-sm" href="${escapeHtml(mediaSrc(media))}" download="${escapeHtml(fname)}">⬇ Download Media</a>`);
+      actions.push(`<button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(publicMediaUrl(media))}', this)">🔗 Media URL</button>`);
     }
     const openUrl = p.target_url && p.target_url.startsWith('http') ? p.target_url : '';
-    if (openUrl) {
+    if (openUrl && !(p.platform === 'X' && openUrl.includes('x.com/MartSchmalzried'))) {
       actions.push(`<a class="btn btn-outline btn-sm" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">↗ Open Target</a>`);
     }
     actions.push(`<button class="btn btn-ok btn-sm" onclick="markPostedManual('${p.id}')">✓ Mark Posted</button>`);
@@ -349,6 +390,8 @@ function renderCard(p, bucket) {
     actions.push(`<button class="btn btn-outline btn-sm" onclick="requeuePost('${p.id}')">↻ Re-Queue Copy</button>`);
   }
 
+  const charMeta = p.platform === 'X' || p.platform === 'TikTok' ? ` · ${(p.text || '').length} chars` : '';
+
   return `
   <div class="card">
     <div class="card-top">
@@ -357,7 +400,7 @@ function renderCard(p, bucket) {
         <span class="badge badge-id">${escapeHtml(p.id)}</span>
         ${modeBadge}
       </div>
-      <span class="card-meta">${escapeHtml(p.language || '')}</span>
+      <span class="card-meta">${escapeHtml(p.language || '')}${charMeta}</span>
     </div>
     <h3 class="card-title">${escapeHtml(p.project || 'Untitled Post')}</h3>
     <div class="card-meta">${escapeHtml(p.account || '')} · ${escapeHtml(p.target_location || '')}${p.posted_at ? ` · Posted ${escapeHtml(p.posted_at.slice(0, 16).replace('T', ' '))}` : ''}</div>
@@ -738,6 +781,7 @@ function openSettingsModal() {
   document.getElementById('c-li').checked = Boolean(ep.LinkedIn);
   document.getElementById('c-fb').checked = Boolean(ep.Facebook);
   document.getElementById('c-ig').checked = Boolean(ep.Instagram);
+  document.getElementById('c-tt').checked = Boolean(ep.TikTok);
   document.getElementById('c-x').checked = Boolean(ep.X);
   document.getElementById('c-max').value = state.config.max_posts_per_run || 2;
   document.getElementById('c-hours').value = state.config.min_hours_per_platform || 36;
@@ -757,6 +801,7 @@ function saveSettingsModal() {
     LinkedIn: document.getElementById('c-li').checked,
     Facebook: document.getElementById('c-fb').checked,
     Instagram: document.getElementById('c-ig').checked,
+    TikTok: document.getElementById('c-tt').checked,
     X: document.getElementById('c-x').checked,
   };
   state.config.max_posts_per_run = Number(document.getElementById('c-max').value) || 2;
