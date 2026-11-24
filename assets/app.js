@@ -323,7 +323,73 @@ function publicMediaUrl(rel) {
   return rel;
 }
 
+function renderManualCard(p) {
+  const media = p.media || '';
+  const isVid = media.toLowerCase().endsWith('.mp4');
+  const fname = media ? media.split('/').pop() : '';
+  const localWinPath = fname ? `C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\${fname}` : '';
+  const mediaRow = media
+    ? `<div class="manual-media-row">
+        ${isVid ? `<video src="${escapeHtml(mediaSrc(media))}" muted></video>` : `<img src="${escapeHtml(mediaSrc(media))}" alt="${escapeHtml(p.project)}" loading="lazy" />`}
+        <div class="manual-media-info">
+          <div class="manual-media-path">${escapeHtml(media)}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <a class="btn btn-outline btn-sm" href="${escapeHtml(mediaSrc(media))}" download="${escapeHtml(fname)}">⬇ Download Media</a>
+            <button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(localWinPath.replace(/\\/g, '\\\\'))}', this)">📁 Copy Local Path</button>
+            <button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(publicMediaUrl(media))}', this)">🔗 Copy URL</button>
+          </div>
+        </div>
+      </div>`
+    : '';
+
+  const ctxHtml =
+    p.context && !p.context.startsWith('N/A')
+      ? `<div class="card-context"><strong>Context:</strong> ${escapeHtml(p.context)}</div>`
+      : '';
+
+  const subBadge =
+    (p.automation_mode || '').toUpperCase() === 'MANUAL_ASSIST'
+      ? '<span class="badge badge-manual">Reply / Group</span>'
+      : '<span class="badge badge-sched">Main Timeline</span>';
+
+  const actions = [];
+  actions.push(`<button class="btn btn-primary" onclick="copyPostText('${p.id}', this)">📋 Copy Post Text</button>`);
+  if (p.platform === 'X') {
+    const intentUrl = `https://x.com/intent/post?text=${encodeURIComponent(p.text || '')}`;
+    actions.push(`<a class="btn btn-outline" href="${escapeHtml(intentUrl)}" target="_blank" rel="noopener">𝕏 Open X Composer (Pre-Filled)</a>`);
+  }
+  const openUrl = p.target_url && p.target_url.startsWith('http') ? p.target_url : '';
+  if (openUrl && !(p.platform === 'X' && openUrl.includes('x.com/MartSchmalzried'))) {
+    const lbl = p.platform === 'TikTok' ? '↗ Open TikTok Upload' : '↗ Open Target Link';
+    actions.push(`<a class="btn btn-outline" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">${lbl}</a>`);
+  }
+  actions.push(`<button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')">✎ Edit</button>`);
+
+  return `
+  <div class="card manual-card">
+    <div class="card-top">
+      <div class="badges">
+        <span class="badge plat-${escapeHtml(p.platform)}">${escapeHtml(p.platform)}</span>
+        <span class="badge badge-id">${escapeHtml(p.id)}</span>
+        ${subBadge}
+        <span class="card-meta">${(p.text || '').length} chars · ${escapeHtml(p.language || '')}</span>
+      </div>
+      <label class="posted-chk">
+        <input type="checkbox" onchange="if(this.checked) markPostedManual('${p.id}')" />
+        <span>Posted</span>
+      </label>
+    </div>
+    <h3 class="card-title">${escapeHtml(p.project || 'Untitled Post')}</h3>
+    <div class="card-meta">${escapeHtml(p.account || '')} · ${escapeHtml(p.target_location || '')}</div>
+    ${ctxHtml}
+    <div class="card-text">${escapeHtml(p.text)}</div>
+    ${mediaRow}
+    <div class="card-actions">${actions.join('')}</div>
+  </div>`;
+}
+
 function renderCard(p, bucket) {
+  if (bucket === 'manual') return renderManualCard(p);
   const media = p.media || '';
   const isVid = media.toLowerCase().endsWith('.mp4');
   const mediaHtml = media
@@ -441,7 +507,8 @@ function render() {
   if (!list.length) {
     area.innerHTML = `<div class="empty-state"><h3>Nothing here right now</h3><p>Try switching platform filters, or click <strong>+ New Post</strong> / <strong>📥 Reload Queue</strong> to add fresh posts.</p></div>`;
   } else {
-    area.innerHTML = `<div class="cards-grid">${list.map((p) => renderCard(p, state.tab)).join('')}</div>`;
+    const wrapClass = state.tab === 'manual' ? 'cards-stack' : 'cards-grid';
+    area.innerHTML = `<div class="${wrapClass}">${list.map((p) => renderCard(p, state.tab)).join('')}</div>`;
   }
 
   // Recent Logs (shown in Posted tab)
@@ -856,6 +923,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.pill').forEach((btn) =>
     btn.addEventListener('click', () => {
       state.platformFilter = btn.dataset.plat;
+      // Smart tab auto-switch: if the clicked platform has 0 items in the current tab, jump to the tab where its posts live!
+      if (state.platformFilter !== 'All') {
+        const cats = categorizePosts();
+        const curHas = (cats[state.tab] || []).some((p) => p.platform === state.platformFilter);
+        if (!curHas) {
+          for (const candidateTab of ['manual', 'scheduled', 'review', 'posted']) {
+            if ((cats[candidateTab] || []).some((p) => p.platform === state.platformFilter)) {
+              state.tab = candidateTab;
+              break;
+            }
+          }
+        }
+      }
       render();
     })
   );
