@@ -1,0 +1,78 @@
+name: Social Hub Auto-Poster
+
+on:
+  schedule:
+    # Runs twice daily (09:15 UTC and 14:15 UTC); script adds random 0-35 min jitter and respects per-platform pacing
+    - cron: '15 9,14 * * *'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to run (all, LinkedIn, Facebook, Instagram, X)'
+        required: false
+        default: 'all'
+      max_posts:
+        description: 'Max posts to publish in this manual run'
+        required: false
+        default: '1'
+      ignore_pacing:
+        description: 'Ignore 36h platform cooldown (true/false)'
+        required: false
+        default: 'true'
+      dry_run:
+        description: 'Dry run only (true/false)'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  autopost:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Run Auto-Poster
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_LITTLESOULS_USER_ID: ${{ secrets.IG_LITTLESOULS_USER_ID }}
+          IG_LITTLESOULS_ACCESS_TOKEN: ${{ secrets.IG_LITTLESOULS_ACCESS_TOKEN }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: |
+          CMD="python scripts/publish_from_queue.py"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            CMD="$CMD --no-jitter --platform ${{ github.event.inputs.platform || 'all' }} --max-posts ${{ github.event.inputs.max_posts || '1' }}"
+            if [ "${{ github.event.inputs.ignore_pacing }}" = "true" ]; then
+              CMD="$CMD --ignore-pacing"
+            fi
+            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+              CMD="$CMD --dry-run"
+            fi
+          fi
+          echo "Executing: $CMD"
+          $CMD
+
+      - name: Commit updated queue & post log
+        run: |
+          git config user.name "Social Hub Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/queue.json data/post_log.json
+          git diff --staged --quiet || git commit -m "chore: update posted queue status [skip ci]"
+          git push

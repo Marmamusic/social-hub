@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Martin Social Hub — Interactive Queue &amp; Auto-Poster</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h1>Martin Social Hub</h1>
+        <div class="sub" id="gh-status-text">Loading...</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn-outline" onclick="openEditModal(null)">+ New Post</button>
+      <button class="btn btn-outline" onclick="openImportModal()">📥 Reload / Import Queue</button>
+      <button class="btn btn-outline" onclick="openRunNowModal()">⚡ Run Now</button>
+      <button class="btn btn-outline" onclick="openSettingsModal()">⚙ Settings</button>
+      <button class="btn btn-primary" id="btn-sync" onclick="syncToGitHub()">💾 Save &amp; Sync</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="banner" id="setup-banner" style="display:none">
+      <div>
+        <strong>One-time setup to edit &amp; auto-publish from this page:</strong> Click <strong>⚙ Settings</strong> and paste your GitHub Personal Access Token (stored only in your browser).
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="openSettingsModal()">Connect GitHub</button>
+        <button class="btn btn-outline btn-sm" onclick="exportQueueJson()">⬇ Export JSON</button>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Scheduled Queue</div>
+        <div class="stat-val" id="stat-scheduled">0</div>
+        <div class="stat-sub" id="stat-scheduled-sub">Auto-posting active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Needs Validation</div>
+        <div class="stat-val" id="stat-review">0</div>
+        <div class="stat-sub">Waiting for your approval</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Manual Copy-Paste</div>
+        <div class="stat-val" id="stat-manual">0</div>
+        <div class="stat-sub">X posts &amp; Groups</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Posted History</div>
+        <div class="stat-val" id="stat-posted">0</div>
+        <div class="stat-sub">Published live</div>
+      </div>
+    </section>
+
+    <div class="tabs-bar">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="scheduled">🗓 Scheduled Queue <span class="tab-count" id="cnt-scheduled">0</span></button>
+        <button class="tab-btn" data-tab="review">✅ Needs Validation <span class="tab-count" id="cnt-review">0</span></button>
+        <button class="tab-btn" data-tab="manual">📋 Manual Copy-Paste <span class="tab-count" id="cnt-manual">0</span></button>
+        <button class="tab-btn" data-tab="posted">🚀 Posted History <span class="tab-count" id="cnt-posted">0</span></button>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="loadData()">↻ Refresh</button>
+    </div>
+
+    <div class="filter-bar">
+      <button class="pill active" data-plat="All">All Platforms</button>
+      <button class="pill" data-plat="LinkedIn">LinkedIn</button>
+      <button class="pill" data-plat="Facebook">Facebook</button>
+      <button class="pill" data-plat="Instagram">Instagram</button>
+      <button class="pill" data-plat="X">X</button>
+      <input class="search-input" id="search-box" type="search" placeholder="Search posts, projects, tags..." />
+    </div>
+
+    <div id="cards-area"></div>
+
+    <section id="logs-section" style="display:none; margin-top:32px;">
+      <h2 style="font-size:16px; margin-bottom:10px;">Recent Auto-Poster Activity Log</h2>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:auto;">
+        <table class="log-table">
+          <thead>
+            <tr><th>Time (UTC)</th><th>Platform</th><th>ID</th><th>Status</th><th>Live URL / Details</th></tr>
+          </thead>
+          <tbody id="logs-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Edit / New Post Modal -->
+  <div class="modal-backdrop" id="modal-edit">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="edit-modal-title">Edit Post</h2>
+        <button class="close-btn" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-row"><label>Post ID</label><input id="f-id" /></div>
+        <div class="form-row">
+          <label>Platform</label>
+          <select id="f-platform">
+            <option>LinkedIn</option><option>Facebook</option><option>Instagram</option><option>X</option>
+          </select>
+        </div>
+        <div class="form-row"><label>Project / Title</label><input id="f-project" /></div>
+        <div class="form-row">
+          <label>Publishing Mode</label>
+          <select id="f-mode">
+            <option value="API_AUTO">API_AUTO (Automatic via GitHub)</option>
+            <option value="MANUAL_ASSIST">MANUAL_ASSIST (Copy-Paste / Groups)</option>
+          </select>
+        </div>
+        <div class="form-row"><label>Account</label><input id="f-account" /></div>
+        <div class="form-row"><label>Language (EN / FR)</label><input id="f-lang" /></div>
+        <div class="form-row">
+          <label>Exact Schedule (UTC, optional — leave blank for Auto-Random)</label>
+          <input id="f-sched" type="datetime-local" />
+        </div>
+        <div class="form-row"><label>Target Location</label><input id="f-target-loc" /></div>
+      </div>
+      <div class="form-row"><label>Post Text</label><textarea id="f-text"></textarea></div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Media Path (repo path like <code>media/gaia_cover_fr.jpg</code> or HTTPS URL)</label>
+          <input id="f-media" />
+        </div>
+        <div class="form-row">
+          <label>Pick Existing Media or Upload New Image to GitHub</label>
+          <div style="display:flex;gap:6px">
+            <select id="f-media-pick" style="flex:1"></select>
+            <label class="btn btn-outline btn-sm" style="margin:0;cursor:pointer">
+              ⬆ Upload
+              <input type="file" accept="image/*,video/mp4" style="display:none" onchange="uploadMediaFileToGitHub(this)" />
+            </label>
+          </div>
+        </div>
+        <div class="form-row"><label>Link to Attach (optional)</label><input id="f-link" /></div>
+        <div class="form-row"><label>Target URL (for Groups / Replies)</label><input id="f-target-url" /></div>
+      </div>
+      <div class="switch-row">
+        <span><strong>Approved for Publishing</strong> (checked = moves straight to Queue)</span>
+        <input type="checkbox" id="f-approved" />
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveEditModal()">Save Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import / Reload New Queue Modal -->
+  <div class="modal-backdrop" id="modal-import">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>📥 Reload / Import New Queue Batch</h2>
+        <button class="close-btn" onclick="closeModals()">&times;</button>
+      </div>
+      <p style="font-size:13px; color:var(--muted); margin-top:0">
+        Drop a new <code>.json</code> or <code>queue_*.csv</code> batch (for example, freshly generated posts from Antigravity). Imported posts are added to <strong>Needs Validation</strong> so you can review and approve each one before it auto-posts!
+      </p>
+      <div class="form-row">
+        <label>Choose JSON or CSV File</label>
+        <input type="file" accept=".json,.csv" onchange="handleImportFile(this)" />
+      </div>
+      <div class="form-row">
+        <label>Or Paste JSON / CSV Directly</label>
+        <textarea id="import-text" placeholder='[{"platform":"LinkedIn","project":"New Paper","text":"...","media":"media/martin_portrait.jpg"}]'></textarea>
+      </div>
+      <div class="switch-row">
+        <span>Place all imported posts into <strong>Needs Validation</strong> first (recommended)</span>
+        <input type="checkbox" id="import-as-review" checked />
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
+        <button class="btn btn-primary" onclick="runImport()">Import Posts</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings & GitHub Sync Modal -->
+  <div class="modal-backdrop" id="modal-settings">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>⚙ Settings &amp; Auto-Poster Schedule</h2>
+        <button class="close-btn" onclick="closeModals()">&times;</button>
+      </div>
+      <h3 style="font-size:14px; margin:0 0 8px;">1. GitHub Sync (Stored ONLY in Your Browser)</h3>
+      <div class="form-grid">
+        <div class="form-row"><label>GitHub Username</label><input id="s-owner" placeholder="marmamusic" /></div>
+        <div class="form-row"><label>Repository Name</label><input id="s-repo" placeholder="social-hub" /></div>
+        <div class="form-row"><label>Branch</label><input id="s-branch" placeholder="main" /></div>
+        <div class="form-row"><label>Fine-Grained GitHub Token (Contents + Actions: Write)</label><input id="s-token" type="password" placeholder="github_pat_..." /></div>
+      </div>
+
+      <h3 style="font-size:14px; margin:16px 0 8px;">2. Enabled Auto-Posting Platforms</h3>
+      <div class="switch-row"><span><strong>LinkedIn</strong> (Personal Profile)</span><input type="checkbox" id="c-li" /></div>
+      <div class="switch-row"><span><strong>Facebook</strong> (Martin Schmalzried - auteur Page)</span><input type="checkbox" id="c-fb" /></div>
+      <div class="switch-row"><span><strong>Instagram</strong> (@martinschmalzrieds Professional)</span><input type="checkbox" id="c-ig" /></div>
+      <div class="switch-row"><span><strong>X</strong> (Off = appears in Manual Copy-Paste tab)</span><input type="checkbox" id="c-x" /></div>
+
+      <h3 style="font-size:14px; margin:16px 0 8px;">3. Pacing &amp; Anti-Spam Randomization</h3>
+      <div class="form-grid">
+        <div class="form-row"><label>Max Posts Per Run</label><input id="c-max" type="number" min="1" max="10" /></div>
+        <div class="form-row"><label>Min Hours Between Posts (per platform)</label><input id="c-hours" type="number" min="1" max="168" /></div>
+        <div class="form-row"><label>Random Delay Jitter (max minutes on cron)</label><input id="c-jitter" type="number" min="0" max="90" /></div>
+        <div class="form-row" style="justify-content:center">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:16px">
+            <input type="checkbox" id="c-shuffle" /> Randomize Queue Order (Shuffle)
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn btn-outline" onclick="exportQueueJson()">⬇ Export JSON Backup</button>
+        <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSettingsModal()">Apply Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Run Now Modal -->
+  <div class="modal-backdrop" id="modal-run">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>⚡ Trigger Cloud Auto-Poster Now</h2>
+        <button class="close-btn" onclick="closeModals()">&times;</button>
+      </div>
+      <p style="font-size:13px; color:var(--muted); margin-top:0">
+        Runs the GitHub Actions publisher immediately (great for testing Instagram right now or publishing a post on demand).
+      </p>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Platform</label>
+          <select id="r-plat">
+            <option value="Instagram">Instagram</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Facebook">Facebook</option>
+            <option value="all">All Enabled Platforms</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Max Posts to Publish</label>
+          <input id="r-max" type="number" value="1" min="1" max="5" />
+        </div>
+      </div>
+      <div class="switch-row"><span>Ignore 36h platform cooldown for this manual run</span><input type="checkbox" id="r-ignore" checked /></div>
+      <div class="switch-row"><span>Dry-run only (preview in Actions log without posting live)</span><input type="checkbox" id="r-dry" /></div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
+        <button class="btn btn-ok" onclick="executeRunNow()">⚡ Run Now on GitHub</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

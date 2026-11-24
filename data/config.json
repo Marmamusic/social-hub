@@ -1,0 +1,15 @@
+{
+  "enabled_platforms": {
+    "LinkedIn": true,
+    "Facebook": true,
+    "Instagram": true,
+    "X": false
+  },
+  "max_posts_per_run": 2,
+  "min_hours_per_platform": 36,
+  "shuffle": true,
+  "random_jitter_max_minutes": 35,
+  "media_base_url": "",
+  "github_pages_auto": true,
+  "notes": "Managed via Social Hub Web Studio. Leave media_base_url blank to auto-use https://<owner>.github.io/<repo>/"
+}
