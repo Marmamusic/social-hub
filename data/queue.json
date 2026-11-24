@@ -682,7 +682,7 @@
       "project": "Drifting Words — Cognitive Parkour Word Trail",
       "automation_mode": "API_AUTO",
       "approved": true,
-      "status": "PENDING",
+      "status": "POSTED",
       "scheduled_at": "",
       "target_location": "Main Feed Carousel (@martinschmalzrieds)",
       "target_url": "https://www.instagram.com/martinschmalzrieds/",
@@ -691,8 +691,8 @@
       "link": "https://marmamusic.github.io/drifting-words/",
       "media": "media/drifting_words_dog_bark_tree.jpg",
       "notes": "Snappy, idea-led.",
-      "posted_at": "",
-      "live_url": ""
+      "posted_at": "2026-11-24T22:18:48.851951+00:00",
+      "live_url": "https://www.instagram.com/p/17971959210207399/"
     },
     {
       "id": "IG-006",
