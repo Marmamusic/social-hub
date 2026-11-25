@@ -20,7 +20,8 @@
       "media": "media/mind_shuffle_feature.jpg",
       "notes": "Directly implements Martin's feedback on cognitive parkour, AI automation, memory loss, and brain training.",
       "posted_at": "2026-11-24T21:47:00.140420+00:00",
-      "live_url": "https://www.linkedin.com/feed/update/urn:li:share:7531111141930893313/"
+      "live_url": "https://www.linkedin.com/feed/update/urn:li:share:7531111141930893313/",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\mind_shuffle_feature.png"
     },
     {
       "id": "LI-002",
@@ -41,7 +42,8 @@
       "media": "media/fleeting_thoughts_feature.jpg",
       "notes": "Directly implements Martin's feedback on transindividuation, synchronicity, and meaning from relations.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\fleeting_thoughts_feature.png"
     },
     {
       "id": "LI-003",
@@ -62,7 +64,8 @@
       "media": "media/latency_wars_feature.jpg",
       "notes": "Rewritten from ad-style pitch to pure philosophical hook.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\latency_wars_feature.jpg"
     },
     {
       "id": "LI-004",
@@ -104,7 +107,8 @@
       "media": "media/act3_relative_dividend.jpg",
       "notes": "Short, clear, impactful.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_03_when_the_curve_bends\\Act_03_When_the_Curve_Bends_Music_Video.mp4"
     },
     {
       "id": "LI-006",
@@ -188,7 +192,8 @@
       "media": "media/ontogenesis_cosmic_composer.jpg",
       "notes": "Honest, personal, philosophical.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\ontogenesis_song\\The_Capacity_to_Compose_Music_Video.mp4"
     },
     {
       "id": "LI-010",
@@ -230,7 +235,8 @@
       "media": "media/composer_studio.jpg",
       "notes": "Zero self-congratulatory fluff; genuine conceptual link.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Multimedia\\Composer - music\\Martin_20080605_2e Studio_B26 - Copy.jpg"
     },
     {
       "id": "LI-012",
@@ -314,7 +320,8 @@
       "media": "media/gaia_cover_fr.jpg",
       "notes": "Automatable via Facebook Page Graph API.",
       "posted_at": "2026-11-24T21:49:32.499583+00:00",
-      "live_url": "https://www.facebook.com/107278471920150_1178692934894518"
+      "live_url": "https://www.facebook.com/107278471920150_1178692934894518",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\gaia_cover_fr.jpg"
     },
     {
       "id": "FB-002",
@@ -335,7 +342,8 @@
       "media": "media/fleeting_thoughts_feature.jpg",
       "notes": "Idea-first, no ad-speak.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\fleeting_thoughts_feature.png"
     },
     {
       "id": "FB-003",
@@ -356,7 +364,8 @@
       "media": "media/act1_the_interface_art.jpg",
       "notes": "Upload MP4 natively to Facebook Page.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_01_the_interface\\Act_01_The_Interface_Music_Video.mp4"
     },
     {
       "id": "FB-004",
@@ -377,7 +386,8 @@
       "media": "media/martin_portrait.jpg",
       "notes": "Automatable via Facebook Page Graph API.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\Martin.jpg"
     },
     {
       "id": "FB-005",
@@ -398,7 +408,8 @@
       "media": "media/cover_front_en2.jpg",
       "notes": "Short and direct.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\cover front en2.png"
     },
     {
       "id": "FB-006",
@@ -419,7 +430,8 @@
       "media": "media/etre_petites_ames.jpg",
       "notes": "MANUAL_ASSIST (Meta deprecated Groups API). Drop link in comments if group rules forbid links in main posts.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\etre.jpg"
     },
     {
       "id": "FB-007",
@@ -440,7 +452,8 @@
       "media": "media/ellyn_cover.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\Ellyn couverture-page001 ES.png"
     },
     {
       "id": "FB-008",
@@ -461,7 +474,8 @@
       "media": "media/ontogenesis_two_mirrors.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\ontogenesis_song\\scenes\\scene_02_two_mirrors.jpg"
     },
     {
       "id": "FB-009",
@@ -482,7 +496,8 @@
       "media": "media/la_terre_accouche_cover.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\la terre accouche_cover_final_RTP5-1.png"
     },
     {
       "id": "FB-010",
@@ -503,7 +518,8 @@
       "media": "media/act3_relative_dividend.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_03_when_the_curve_bends\\scenes\\act3_03_relative_dividend.png"
     },
     {
       "id": "FB-011",
@@ -524,7 +540,8 @@
       "media": "media/latency_wars_arena_gameplay.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\latency_wars_arena_gameplay.png"
     },
     {
       "id": "FB-012",
@@ -545,7 +562,8 @@
       "media": "media/unity_medieval_combo.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\Assets Media\\Medieval\\combo feature blended.png"
     },
     {
       "id": "FB-013",
@@ -566,7 +584,8 @@
       "media": "media/drifting_words_easy_drift.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\drifting_words_easy_drift.png"
     },
     {
       "id": "FB-014",
@@ -587,7 +606,8 @@
       "media": "media/composer_piano.jpg",
       "notes": "MANUAL_ASSIST.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Multimedia\\Composer - music\\IMG_20170122_160709.jpg"
     },
     {
       "id": "IG-001",
@@ -608,7 +628,8 @@
       "media": "media/gaia_cover_fr.jpg",
       "notes": "Export page 1 as JPG or attach Ellyn reading Reel.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\gaia_cover_fr.jpg"
     },
     {
       "id": "IG-002",
@@ -629,7 +650,8 @@
       "media": "media/etre_petites_ames.jpg",
       "notes": "Matches Martin's exact casual IG caption style.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\etre.jpg"
     },
     {
       "id": "IG-003",
@@ -650,7 +672,8 @@
       "media": "media/ellyn_cover.jpg",
       "notes": "Short, warm, non-salesy.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\Ellyn couverture-page001 ES.png"
     },
     {
       "id": "IG-004",
@@ -671,7 +694,8 @@
       "media": "media/mind_shuffle_remember_rooms.jpg",
       "notes": "Carousel: Slide 1 rooms -> Slide 2 swaps -> Slide 3 answer.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\mind_shuffle_remember_rooms.png"
     },
     {
       "id": "IG-005",
@@ -692,7 +716,8 @@
       "media": "media/drifting_words_dog_bark_tree.jpg",
       "notes": "Snappy, idea-led.",
       "posted_at": "2026-11-24T22:18:48.851951+00:00",
-      "live_url": "https://www.instagram.com/p/17971959210207399/"
+      "live_url": "https://www.instagram.com/p/17971959210207399/",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\drifting_words_dog_bark_tree.png"
     },
     {
       "id": "IG-006",
@@ -713,7 +738,8 @@
       "media": "media/fleeting_thoughts_screen_1_question.jpg",
       "notes": "Focuses squarely on transindividuation, synchronicity, and meaning from relations.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\fleeting_thoughts_screen_1_question.png"
     },
     {
       "id": "IG-007",
@@ -734,7 +760,8 @@
       "media": "media/latency_wars_arena_gameplay.jpg",
       "notes": "Short and punchy.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\latency_wars_arena_gameplay.png"
     },
     {
       "id": "IG-008",
@@ -755,7 +782,8 @@
       "media": "media/act1_the_interface_art.jpg",
       "notes": "Zero promo fluff — lets the music video speak for itself.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_01_the_interface\\Act_01_The_Interface_Music_Video.mp4"
     },
     {
       "id": "IG-009",
@@ -776,7 +804,8 @@
       "media": "media/act2_overfishing_lake_art.jpg",
       "notes": "Pure philosophical punch.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_02_overfishing_the_lake\\Act_02_Overfishing_the_Lake_Music_Video.mp4"
     },
     {
       "id": "IG-010",
@@ -797,7 +826,8 @@
       "media": "media/ontogenesis_cosmic_composer.jpg",
       "notes": "Simple, moving, authentic.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\ontogenesis_song\\The_Capacity_to_Compose_Vocal_Music_Video.mp4"
     },
     {
       "id": "IG-011",
@@ -818,7 +848,8 @@
       "media": "media/future_as_one.jpg",
       "notes": "Casual, candid, zero ad-speak.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\future as one.png"
     },
     {
       "id": "IG-012",
@@ -839,7 +870,8 @@
       "media": "media/ai_priming_existence.mp4",
       "notes": "You have 1.mp4–20.mp4 ready to run as a full series.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\AI priming\\Existence\\1.mp4"
     },
     {
       "id": "IG-013",
@@ -860,7 +892,8 @@
       "media": "media/album_angels_demons.jpg",
       "notes": "Real personal story from Martin's website, zero marketing hype.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Multimedia\\Composer - music\\Unity music\\album cover angels and demons.jpg"
     },
     {
       "id": "IG-014",
@@ -881,7 +914,8 @@
       "media": "media/la_terre_accouche_cover.jpg",
       "notes": "Short, vivid, unmistakable Martin metaphor.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\la terre accouche_cover_final_RTP5-1.png"
     },
     {
       "id": "X-001",
@@ -902,7 +936,8 @@
       "media": "media/fleeting_thoughts_feature.jpg",
       "notes": "Paid ad-free link for optional reply: https://play.google.com/store/apps/details?id=com.marma.fleetingthoughts",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\fleeting_thoughts_feature.png"
     },
     {
       "id": "X-002",
@@ -923,7 +958,8 @@
       "media": "media/latency_wars_feature.jpg",
       "notes": "Verify exact Play Store URL for com.marma.latencywars.free once live.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\latency_wars_feature.jpg"
     },
     {
       "id": "X-003",
@@ -944,7 +980,8 @@
       "media": "media/mind_shuffle_feature.jpg",
       "notes": "Idea-first: automation -> cognitive offloading -> cognitive parkour.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\mind_shuffle_feature.png"
     },
     {
       "id": "X-004",
@@ -965,7 +1002,8 @@
       "media": "media/drifting_words_dog_bark_tree.jpg",
       "notes": "Optional reply later with the answer: BARK.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\drifting_words_dog_bark_tree.png"
     },
     {
       "id": "X-005",
@@ -986,7 +1024,8 @@
       "media": "media/act1_the_interface_art.jpg",
       "notes": "Attach MP4 clip directly (or link once on YouTube).",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_01_the_interface\\Act_01_The_Interface_Music_Video.mp4"
     },
     {
       "id": "X-006",
@@ -1007,7 +1046,8 @@
       "media": "media/act3_relative_dividend.jpg",
       "notes": "Can attach MP4 or act3_01_scurve_horizon.png.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_03_when_the_curve_bends\\Act_03_When_the_Curve_Bends_Music_Video.mp4"
     },
     {
       "id": "X-007",
@@ -1028,7 +1068,8 @@
       "media": "media/ontogenesis_cosmic_composer.jpg",
       "notes": "Alternate image: scene_08_cosmic_composer.jpg.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\ontogenesis_song\\The_Capacity_to_Compose_Vocal_Music_Video.mp4"
     },
     {
       "id": "X-008",
@@ -1049,7 +1090,8 @@
       "media": "media/coface_bef.jpg",
       "notes": "Directly echoes Martin's classic \"young adults moving out\" metaphor.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Multimedia\\COFACE images\\BEF.jpg"
     },
     {
       "id": "X-009",
@@ -1133,7 +1175,8 @@
       "media": "media/future_as_one.jpg",
       "notes": "Direct, authentic, zero sales fluff.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\future as one.png"
     },
     {
       "id": "X-013",
@@ -1154,7 +1197,8 @@
       "media": "media/cover_front_en2.jpg",
       "notes": "Optional reply with YouTube extract: https://www.youtube.com/watch?v=WeMIpQy3Irs",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\cover front en2.png"
     },
     {
       "id": "X-014",
@@ -1175,7 +1219,8 @@
       "media": "media/cover_marma.jpg",
       "notes": "Plain, direct dev-to-dev voice.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Multimedia\\Composer - music\\Unity music\\cover marma.png"
     },
     {
       "id": "X-015",
@@ -1259,7 +1304,8 @@
       "media": "media/latency_wars_tactical_grid.jpg",
       "notes": "Short, honest dev question.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social media\\media\\latency_wars_tactical_grid.png"
     },
     {
       "id": "TT-001",
@@ -1268,7 +1314,7 @@
       "language": "EN",
       "pillar": "AI & Philosophy",
       "project": "AI Priming, Existence & Consciousness",
-      "automation_mode": "API_AUTO",
+      "automation_mode": "MANUAL_ASSIST",
       "approved": false,
       "status": "PENDING",
       "scheduled_at": "",
@@ -1280,7 +1326,8 @@
       "media": "media/ai_priming_existence.mp4",
       "notes": "Uses your 0.9MB MP4 clip (works great on TikTok video API or direct upload).",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\AI priming\\Existence\\1.mp4"
     },
     {
       "id": "TT-002",
@@ -1289,7 +1336,7 @@
       "language": "EN",
       "pillar": "Apps & Games",
       "project": "Cognitive Parkour, Mind Shuffle",
-      "automation_mode": "API_AUTO",
+      "automation_mode": "MANUAL_ASSIST",
       "approved": false,
       "status": "PENDING",
       "scheduled_at": "",
@@ -1301,7 +1348,8 @@
       "media": "media/mind_shuffle_remember_rooms.jpg",
       "notes": "High comment-bait puzzle format for TikTok Photo Mode.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\mind_shuffle_remember_rooms.jpg"
     },
     {
       "id": "TT-003",
@@ -1310,7 +1358,7 @@
       "language": "EN",
       "pillar": "Apps & Games",
       "project": "Cognitive Parkour, Drifting Words",
-      "automation_mode": "API_AUTO",
+      "automation_mode": "MANUAL_ASSIST",
       "approved": false,
       "status": "PENDING",
       "scheduled_at": "",
@@ -1322,7 +1370,8 @@
       "media": "media/drifting_words_dog_bark_tree.jpg",
       "notes": "Short interactive riddle for TikTok Photo Mode.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\drifting_words_dog_bark_tree.jpg"
     },
     {
       "id": "TT-004",
@@ -1331,7 +1380,7 @@
       "language": "EN",
       "pillar": "Apps & Games",
       "project": "Fleeting Thoughts, Synchronicity & Relation",
-      "automation_mode": "API_AUTO",
+      "automation_mode": "MANUAL_ASSIST",
       "approved": false,
       "status": "PENDING",
       "scheduled_at": "",
@@ -1343,7 +1392,8 @@
       "media": "media/fleeting_thoughts_screen_1_question.jpg",
       "notes": "Concept-first hook for TikTok.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\fleeting_thoughts_screen_1_question.jpg"
     },
     {
       "id": "TT-005",
@@ -1352,7 +1402,7 @@
       "language": "EN",
       "pillar": "Apps & Games",
       "project": "Latency Wars, Sci-Fi Tactics",
-      "automation_mode": "API_AUTO",
+      "automation_mode": "MANUAL_ASSIST",
       "approved": false,
       "status": "PENDING",
       "scheduled_at": "",
@@ -1364,7 +1414,8 @@
       "media": "media/latency_wars_arena_gameplay.jpg",
       "notes": "No spoiler on the ending.",
       "posted_at": "",
-      "live_url": ""
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\latency_wars_arena_gameplay.jpg"
     },
     {
       "id": "TT-006",
@@ -1373,7 +1424,7 @@
       "language": "FR",
       "pillar": "Books & Philosophy",
       "project": "Gaïa et les êtres humains",
-      "automation_mode": "API_AUTO",
+      "automation_mode": "MANUAL_ASSIST",
       "approved": false,
       "status": "PENDING",
       "scheduled_at": "",
@@ -1384,6 +1435,73 @@
       "link": "https://amzn.eu/d/07DGJwje",
       "media": "media/gaia_cover_fr.jpg",
       "notes": "French BookTok caption.",
+      "posted_at": "",
+      "live_url": "",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\gaia_cover_fr.jpg"
+    },
+    {
+      "id": "TT-007",
+      "platform": "TikTok",
+      "account": "@martinschmalzried",
+      "language": "EN",
+      "pillar": "Music & Philosophy",
+      "project": "Living System Suite, Act 1: The Interface (Music Video)",
+      "automation_mode": "MANUAL_ASSIST",
+      "approved": false,
+      "status": "PENDING",
+      "scheduled_at": "",
+      "target_location": "TikTok Main Feed (Music Video)",
+      "target_url": "https://www.tiktok.com/upload",
+      "context": "Full MP4 music video on your hard drive (or trim a 60s highlight inside TikTok uploader).",
+      "text": "What happens when a living system forgets how to stay open to the world around it?\n\nAct 1 of my musical suite \"Living System\", The Interface. Composed and visualized as a philosophical reflection on technology, consciousness, and planetary life. :-)\n\n#OriginalMusic #Philosophy #MusicVideo #AI #SystemsThinking #IndieComposer",
+      "link": "https://www.youtube.com/@martinschmalzried",
+      "media": "media/act1_the_interface_art.jpg",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_01_the_interface\\Act_01_The_Interface_Music_Video.mp4",
+      "notes": "Points to your full local MP4 on disk; thumbnail shows online in Social Hub.",
+      "posted_at": "",
+      "live_url": ""
+    },
+    {
+      "id": "TT-008",
+      "platform": "TikTok",
+      "account": "@martinschmalzried",
+      "language": "EN",
+      "pillar": "Music & Philosophy",
+      "project": "Living System Suite, Act 3: When the Curve Bends (Music Video)",
+      "automation_mode": "MANUAL_ASSIST",
+      "approved": false,
+      "status": "PENDING",
+      "scheduled_at": "",
+      "target_location": "TikTok Main Feed (Music Video)",
+      "target_url": "https://www.tiktok.com/upload",
+      "context": "Full MP4 music video on your hard drive (can upload directly or pick the peak section in TikTok).",
+      "text": "Every exponential curve eventually bends. The question is whether it collapses, or transforms into something wiser.\n\nAct 3 of the Living System Suite: \"When the Curve Bends\". Music meets systems philosophy. :-)\n\n#MusicVideo #Philosophy #FutureOfHumanity #OriginalMusic #SystemsThinking #IndieMusic",
+      "link": "https://www.youtube.com/@martinschmalzried",
+      "media": "media/act3_relative_dividend.jpg",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\living_system_suite\\act_03_when_the_curve_bends\\Act_03_When_the_Curve_Bends_Music_Video.mp4",
+      "notes": "Full MP4 on local hard drive.",
+      "posted_at": "",
+      "live_url": ""
+    },
+    {
+      "id": "TT-009",
+      "platform": "TikTok",
+      "account": "@martinschmalzried",
+      "language": "EN",
+      "pillar": "Music & Philosophy",
+      "project": "The Capacity to Compose (Vocal Music Video)",
+      "automation_mode": "MANUAL_ASSIST",
+      "approved": false,
+      "status": "PENDING",
+      "scheduled_at": "",
+      "target_location": "TikTok Main Feed (Music Video)",
+      "target_url": "https://www.tiktok.com/upload",
+      "context": "Full vocal music video MP4 on your hard drive.",
+      "text": "We usually think of the universe as an accident of blind physics. What if existence is closer to an ongoing composition?\n\nHere is my vocal track and video \"The Capacity to Compose\", turning metaphysics into music. :-)\n\n#OriginalSong #Metaphysics #Consciousness #Philosophy #MusicVideo #IndieArtist",
+      "link": "https://www.youtube.com/@martinschmalzried",
+      "media": "media/ontogenesis_cosmic_composer.jpg",
+      "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\metaphysics\\ontogenesis_song\\The_Capacity_to_Compose_Vocal_Music_Video.mp4",
+      "notes": "Full vocal MP4 on local hard drive.",
       "posted_at": "",
       "live_url": ""
     }

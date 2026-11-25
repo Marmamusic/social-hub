@@ -325,22 +325,33 @@ function publicMediaUrl(rel) {
 
 function renderManualCard(p) {
   const media = p.media || '';
-  const isVid = media.toLowerCase().endsWith('.mp4');
+  const localFile = (p.local_file || '').trim();
   const fname = media ? media.split('/').pop() : '';
-  const localWinPath = fname ? `C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\${fname}` : '';
-  const mediaRow = media
-    ? `<div class="manual-media-row">
-        ${isVid ? `<video src="${escapeHtml(mediaSrc(media))}" muted></video>` : `<img src="${escapeHtml(mediaSrc(media))}" alt="${escapeHtml(p.project)}" loading="lazy" />`}
+  const fallbackLocal = fname ? `C:\\Users\\RepairTest\\Documents\\Martin\\social-hub\\media\\${fname}` : '';
+  const pcPath = localFile || fallbackLocal;
+  const isLocalVideo = pcPath.toLowerCase().endsWith('.mp4');
+  const isOnlineVideo = media.toLowerCase().endsWith('.mp4');
+
+  const mediaRow =
+    media || pcPath
+      ? `<div class="manual-media-row">
+        ${
+          media
+            ? isOnlineVideo
+              ? `<video src="${escapeHtml(mediaSrc(media))}" muted></video>`
+              : `<img src="${escapeHtml(mediaSrc(media))}" alt="${escapeHtml(p.project)}" loading="lazy" />`
+            : ''
+        }
         <div class="manual-media-info">
-          <div class="manual-media-path">${escapeHtml(media)}</div>
+          ${pcPath ? `<div class="manual-media-path"><strong>${isLocalVideo ? '🎬 PC Video:' : '🖼 PC File:'}</strong> ${escapeHtml(pcPath)}</div>` : ''}
           <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <a class="btn btn-outline btn-sm" href="${escapeHtml(mediaSrc(media))}" download="${escapeHtml(fname)}">⬇ Download Media</a>
-            <button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(localWinPath.replace(/\\/g, '\\\\'))}', this)">📁 Copy Local Path</button>
-            <button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(publicMediaUrl(media))}', this)">🔗 Copy URL</button>
+            ${pcPath ? `<button class="btn btn-primary btn-sm" onclick="copyRaw('${escapeHtml(pcPath.replace(/\\/g, '\\\\'))}', this)">📁 Copy PC File Path</button>` : ''}
+            ${media ? `<a class="btn btn-outline btn-sm" href="${escapeHtml(mediaSrc(media))}" download="${escapeHtml(fname)}">⬇ Download Online Media</a>` : ''}
+            ${media ? `<button class="btn btn-outline btn-sm" onclick="copyRaw('${escapeHtml(publicMediaUrl(media))}', this)">🔗 Copy Online URL</button>` : ''}
           </div>
         </div>
       </div>`
-    : '';
+      : '';
 
   const ctxHtml =
     p.context && !p.context.startsWith('N/A')
@@ -348,9 +359,13 @@ function renderManualCard(p) {
       : '';
 
   const subBadge =
-    (p.automation_mode || '').toUpperCase() === 'MANUAL_ASSIST'
-      ? '<span class="badge badge-manual">Reply / Group</span>'
-      : '<span class="badge badge-sched">Main Timeline</span>';
+    p.platform === 'TikTok'
+      ? isLocalVideo
+        ? '<span class="badge badge-sched">🎬 Video Upload</span>'
+        : '<span class="badge badge-sched">🖼 Photo Mode</span>'
+      : (p.automation_mode || '').toUpperCase() === 'MANUAL_ASSIST'
+        ? '<span class="badge badge-manual">Reply / Group</span>'
+        : '<span class="badge badge-sched">Main Timeline</span>';
 
   const actions = [];
   actions.push(`<button class="btn btn-primary" onclick="copyPostText('${p.id}', this)">📋 Copy Post Text</button>`);
@@ -358,9 +373,9 @@ function renderManualCard(p) {
     const intentUrl = `https://x.com/intent/post?text=${encodeURIComponent(p.text || '')}`;
     actions.push(`<a class="btn btn-outline" href="${escapeHtml(intentUrl)}" target="_blank" rel="noopener">𝕏 Open X Composer (Pre-Filled)</a>`);
   }
-  const openUrl = p.target_url && p.target_url.startsWith('http') ? p.target_url : '';
+  const openUrl = p.target_url && p.target_url.startsWith('http') ? p.target_url : p.platform === 'TikTok' ? 'https://www.tiktok.com/upload' : '';
   if (openUrl && !(p.platform === 'X' && openUrl.includes('x.com/MartSchmalzried'))) {
-    const lbl = p.platform === 'TikTok' ? '↗ Open TikTok Upload' : '↗ Open Target Link';
+    const lbl = p.platform === 'TikTok' ? '🎵 Open TikTok Upload' : '↗ Open Target Link';
     actions.push(`<a class="btn btn-outline" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">${lbl}</a>`);
   }
   actions.push(`<button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')">✎ Edit</button>`);
@@ -503,6 +518,11 @@ function render() {
   const map = { scheduled, review, manual, posted };
   const list = filterList(map[state.tab] || []);
   const area = document.getElementById('cards-area');
+  const bulkBtn = document.getElementById('btn-approve-visible');
+  if (bulkBtn) {
+    bulkBtn.style.display = state.tab === 'review' && list.length > 0 ? 'inline-flex' : 'none';
+    bulkBtn.textContent = `✓ Approve All Visible (${list.length})`;
+  }
 
   if (!list.length) {
     area.innerHTML = `<div class="empty-state"><h3>Nothing here right now</h3><p>Try switching platform filters, or click <strong>+ New Post</strong> / <strong>📥 Reload Queue</strong> to add fresh posts.</p></div>`;
@@ -544,6 +564,17 @@ function approvePost(id, val) {
   markDirty();
   render();
   toast(val ? `✓ ${id} approved & queued!` : `↩ ${id} moved back to Needs Validation`);
+}
+
+function approveAllVisible() {
+  const { review } = categorizePosts();
+  const visible = filterList(review);
+  if (!visible.length) return;
+  if (!confirm(`Approve all ${visible.length} visible post(s)?`)) return;
+  visible.forEach((p) => (p.approved = true));
+  markDirty();
+  render();
+  toast(`✓ Approved ${visible.length} post(s)! Click "Save & Sync to GitHub" to save.`);
 }
 
 function archivePost(id) {
@@ -656,6 +687,7 @@ function openEditModal(id = null) {
   document.getElementById('f-target-url').value = p.target_url || '';
   document.getElementById('f-link').value = p.link || '';
   document.getElementById('f-media').value = p.media || '';
+  document.getElementById('f-local-file').value = p.local_file || '';
   document.getElementById('f-text').value = p.text || '';
   document.getElementById('f-approved').checked = Boolean(p.approved);
   populateMediaSelect(p.media || '');
@@ -675,6 +707,7 @@ function saveEditModal() {
     target_url: document.getElementById('f-target-url').value.trim(),
     link: document.getElementById('f-link').value.trim(),
     media: document.getElementById('f-media').value.trim(),
+    local_file: document.getElementById('f-local-file').value.trim(),
     text: document.getElementById('f-text').value.trim(),
     approved: document.getElementById('f-approved').checked,
   };

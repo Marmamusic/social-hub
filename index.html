@@ -65,7 +65,10 @@
         <button class="tab-btn" data-tab="manual">📋 Manual Copy-Paste <span class="tab-count" id="cnt-manual">0</span></button>
         <button class="tab-btn" data-tab="posted">🚀 Posted History <span class="tab-count" id="cnt-posted">0</span></button>
       </div>
-      <button class="btn btn-outline btn-sm" onclick="loadData()">↻ Refresh</button>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="btn btn-ok btn-sm" id="btn-approve-visible" style="display:none" onclick="approveAllVisible()">✓ Approve All Visible</button>
+        <button class="btn btn-outline btn-sm" onclick="loadData()">↻ Refresh</button>
+      </div>
     </div>
 
     <div class="filter-bar">
@@ -141,8 +144,9 @@
           </div>
         </div>
         <div class="form-row"><label>Link to Attach (optional)</label><input id="f-link" /></div>
-        <div class="form-row"><label>Target URL (for Groups / Replies)</label><input id="f-target-url" /></div>
+        <div class="form-row"><label>Target URL (for Groups / Replies / TikTok Upload)</label><input id="f-target-url" /></div>
       </div>
+      <div class="form-row"><label>Local PC File Path (optional — for quick copy-paste into TikTok / X file picker)</label><input id="f-local-file" placeholder="C:\Users\RepairTest\Documents\Martin\..." /></div>
       <div class="switch-row">
         <span><strong>Approved for Publishing</strong> (checked = moves straight to Queue)</span>
         <input type="checkbox" id="f-approved" />
@@ -202,8 +206,8 @@
       <div class="switch-row"><span><strong>LinkedIn</strong> (Personal Profile)</span><input type="checkbox" id="c-li" /></div>
       <div class="switch-row"><span><strong>Facebook</strong> (Martin Schmalzried - auteur Page)</span><input type="checkbox" id="c-fb" /></div>
       <div class="switch-row"><span><strong>Instagram</strong> (@martinschmalzrieds Professional)</span><input type="checkbox" id="c-ig" /></div>
-      <div class="switch-row"><span><strong>TikTok</strong> (Content Posting API — requires TIKTOK_ACCESS_TOKEN secret)</span><input type="checkbox" id="c-tt" /></div>
-      <div class="switch-row"><span><strong>X</strong> (Off = appears in Manual Copy-Paste tab with 1-click compose)</span><input type="checkbox" id="c-x" /></div>
+      <div class="switch-row"><span><strong>TikTok</strong> (Off = Manual Copy-Paste with PC Video Path &amp; Download)</span><input type="checkbox" id="c-tt" /></div>
+      <div class="switch-row"><span><strong>X</strong> (Off = Manual Copy-Paste with 1-Click Pre-Filled Compose)</span><input type="checkbox" id="c-x" /></div>
 
       <h3 style="font-size:14px; margin:16px 0 8px;">3. Pacing &amp; Anti-Spam Randomization</h3>
       <div class="form-grid">
@@ -242,7 +246,6 @@
             <option value="Instagram">Instagram</option>
             <option value="LinkedIn">LinkedIn</option>
             <option value="Facebook">Facebook</option>
-            <option value="TikTok">TikTok</option>
             <option value="all">All Enabled Platforms</option>
           </select>
         </div>
