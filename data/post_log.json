@@ -30,5 +30,21 @@
     "project": "Fleeting Thoughts (Android)",
     "status": "POSTED",
     "url": "https://x.com/MartSchmalzried"
+  },
+  {
+    "ts": "2026-11-26T19:17:54.949049+00:00",
+    "platform": "LinkedIn",
+    "id": "LI-003",
+    "project": "Latency Wars — Simulation Theory, Planetary Mind & Game Design",
+    "status": "POSTED",
+    "url": "https://www.linkedin.com/feed/update/urn:li:share:7531798407326142466/"
+  },
+  {
+    "ts": "2026-11-26T19:18:06.184307+00:00",
+    "platform": "Instagram",
+    "id": "IG-011",
+    "project": "L'avenir comme un (Éco-anxiété)",
+    "status": "POSTED",
+    "url": "https://www.instagram.com/p/18033792494872416/"
   }
 ]
