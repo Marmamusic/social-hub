@@ -376,7 +376,7 @@
       "project": "En quête de sens — 6 séances sur YouTube",
       "automation_mode": "API_AUTO",
       "approved": true,
-      "status": "PENDING",
+      "status": "POSTED",
       "scheduled_at": "",
       "target_location": "Facebook Author Page (Main Timeline)",
       "target_url": "https://www.facebook.com/schmalzriedmartin",
@@ -385,8 +385,8 @@
       "link": "https://www.youtube.com/watch?v=zRBXgn0YaQs&list=PLsVTdqT6fDzp8WlfEdpolSejHyhJCs4oo",
       "media": "media/martin_portrait.jpg",
       "notes": "Automatable via Facebook Page Graph API.",
-      "posted_at": "",
-      "live_url": "",
+      "posted_at": "2026-11-27T19:12:02.728977+00:00",
+      "live_url": "https://www.facebook.com/107278471920150_1182008567896288",
       "local_file": "C:\\Users\\RepairTest\\Documents\\Martin\\Images\\Martin.jpg"
     },
     {
